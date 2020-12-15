@@ -1,0 +1,27 @@
+{
+    "inventory_path": ".",
+    "fields": [
+        "aliases"
+    ],
+    "log_level": "info",
+    "log_file": "/tmp/di.log",
+    "group_prefix": "grp",
+    "group_path":{
+        "os": [
+            "OS::Distro::MajorVersion",
+            "OS::Distro::OsVersion",
+            "OS::Distro::CodeName",
+            "OS::Distro",
+            "OS"
+        ],
+        "loc": [
+            "Datacenter::Rack::Row",
+            "Datacenter::Rack",
+            "Datacenter"
+        ],
+        "role": "roles",
+        "domain": "hostdomain",
+        "platform": null,
+        "cluster": "Cluster::Node"
+    }
+}
