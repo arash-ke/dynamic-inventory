@@ -38,7 +38,10 @@ if os.path.isfile("%s/dynamic_inventory.cfg" % script_dir):
 
 inventory_path = "%s/%s" % (script_dir, hosts_var_dir)
 if "inventory_path" in options:
-    inventory_path = "%s/%s" % (options["inventory_path"], hosts_var_dir)
+    if options["inventory_path"].startswith("/"):
+        inventory_path = "%s/%s" % (options["inventory_path"], hosts_var_dir)
+    else:
+        inventory_path = "%s/%s/%s" % (script_dir, options["inventory_path"], hosts_var_dir)
 
 class Inventory:
     def __init__(self):
