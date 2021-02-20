@@ -1,5 +1,6 @@
 {
-    "inventory_path": ".",
+    "inventory_base": "../..",
+    "inventory_path": "..",
     "fields": [
         "aliases"
     ],

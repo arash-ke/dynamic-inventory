@@ -36,6 +36,13 @@ if os.path.isfile("%s/dynamic_inventory.cfg" % script_dir):
     with open("%s/dynamic_inventory.cfg" % script_dir) as f:
         options = json.load(f)
 
+inventory_base = os.path.realpath("%s/../.." % (script_dir))
+if "inventory_base" in options:
+    if options["inventory_base"].startswith("/"):
+        inventory_base = os.path.realpath("%s" % (options["inventory_base"]))
+    else:
+        inventory_base = os.path.realpath("%s/%s" % (script_dir, options["inventory_base"]))
+
 inventory_path = "%s/%s" % (script_dir, hosts_var_dir)
 if "inventory_path" in options:
     if options["inventory_path"].startswith("/"):
@@ -251,7 +258,7 @@ def get_hosts(path, inventory, current_group):
 def print_host_list():
     inventory = Inventory()
     
-    get_hosts(inventory_path, inventory, 'dir_' + os.path.basename(script_dir))
+    get_hosts(inventory_path, inventory, 'inv_' + os.path.basename(inventory_base))
 
     hosts_string = jsonify(inventory.to_dict())
     logging.info(hosts_string)
@@ -260,7 +267,7 @@ def print_host_list():
 def list_text():
     inventory = Inventory()
 
-    get_hosts(inventory_path, inventory, 'dir_' + os.path.basename(script_dir))
+    get_hosts(inventory_path, inventory, 'inv_' + os.path.basename(inventory_base))
 
     hosts_string = jsonify(inventory.to_list())
     print(hosts_string)
