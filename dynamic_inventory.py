@@ -9,10 +9,12 @@ import yaml
 import re
 import glob
 
+from functools import reduce
+
 from ansible.parsing.vault import VaultLib, get_file_vault_secret, is_encrypted_file
 from ansible.parsing.yaml.loader import AnsibleLoader
 from ansible.parsing.utils.jsonify import jsonify
-from ansible.parsing.yaml.objects import AnsibleSequence, AnsibleUnicode
+from ansible.parsing.yaml.objects import AnsibleSequence, AnsibleUnicode, AnsibleMapping
 # from ansible.parsing.dataloader import DataLoader
 
 
@@ -160,21 +162,32 @@ def build_grp_path(prefix, path, inventory, get_value):
     if len(path) > 0:
         p = path.pop()
         parents = build_grp_path(prefix, path, inventory, get_value)
-        value = get_value(p)
+        path_split = p.split('/')
+        value = get_value(path_split[0])
+        t = type(value)
         if value != None:
             vlist = None
-            t = type(value)
+            if t == dict or t == AnsibleMapping:
+                try:
+                    value = reduce(AnsibleMapping.get, path_split[1].split('.'), value)
+                except:
+                    value = None
+                t = type(value)
             if t == list or t == AnsibleSequence:
                 vlist = value
+            elif t == dict or t == AnsibleMapping:
+                vlist = [ path_split[1] ]
             else:
                 vlist = [value]
-            grp = None
-            for v in vlist:
-                for parent in parents:
-                    grp = "%s_%s" % (parent, v)
-                    inventory.add_child(parent, grp)
-                if grp != None:
-                    groups.append(grp)
+            if vlist != None:
+                grp = None
+                for v in vlist:
+                    if v != None:
+                        for parent in parents:
+                            grp = "%s_%s" % (parent, v)
+                            inventory.add_child(parent, grp)
+                        if grp != None:
+                            groups.append(grp)
         return groups
     else:
         return [prefix]
