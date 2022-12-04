@@ -15,6 +15,7 @@ from ansible.parsing.vault import VaultLib, get_file_vault_secret, is_encrypted_
 from ansible.parsing.yaml.loader import AnsibleLoader
 from ansible.parsing.utils.jsonify import jsonify
 from ansible.parsing.yaml.objects import AnsibleSequence, AnsibleUnicode, AnsibleMapping
+from ansible.utils.vars import combine_vars
 # from ansible.parsing.dataloader import DataLoader
 
 
@@ -134,9 +135,13 @@ def load_info(infopath):
     if os.path.isfile(infopath):
         infofiles.append(infopath)
     elif os.path.isdir(infopath):
-        for f in os.listdir(infopath):
-            if os.path.isfile("%s/%s" % (infopath, f)):
-                infofiles.append("%s/%s" % (infopath, f))
+        flist = []
+        # for f in os.listdir(infopath):
+        #     flist.append("%s/%s" % (infopath, f))
+        flist = glob.glob(infopath + '/**/*.*', recursive=True)
+        for f in flist:
+            if os.path.isfile(f):
+                infofiles.append(f)
     for fpath in infofiles:
         if not fpath.endswith(valid_extentions):
             continue
@@ -154,7 +159,8 @@ def load_info(infopath):
     info = dict({})
     for i in infos:
         if i is not None:
-            info.update(i)
+            # info.update(i)
+            info = combine_vars(info, i)
     return info
 
 def build_grp_path(prefix, path, inventory, get_value):

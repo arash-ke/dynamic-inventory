@@ -9,20 +9,21 @@
     "group_prefix": "grp",
     "group_path":{
         "os": [
-            "OS::Distro::MajorVersion",
-            "OS::Distro::OsVersion",
-            "OS::Distro::CodeName",
-            "OS::Distro",
-            "OS"
+            "host_info/os.type::host_info/os.distro::host_info/os.majorVersion",
+            "host_info/os.type::host_info/os.distro::host_info/os.osVersion",
+            "host_info/os.type::host_info/os.distro::host_info/os.codeName",
+            "host_info/os.type::host_info/os.distro",
+            "host_info/os.type"
         ],
         "loc": [
-            "Datacenter::Rack::Row",
-            "Datacenter::Rack",
-            "Datacenter"
+            "host_info/location.datacenter::host_info/location.rackRow",
+            "host_info/location.datacenter::host_info/location.rack",
+            "host_info/location.datacenter",
+            "host_info/location.site",
+            "host_info/cluster::host_info/cluster.name"
         ],
-        "role": "roles",
-        "domain": "hostdomain",
-        "platform": null,
-        "cluster": "Cluster::Node"
+        "role": "host_info/roles",
+        "domain": "host_info/domain",
+        "type": "host_info/type"
     }
 }
