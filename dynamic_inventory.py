@@ -182,7 +182,8 @@ def build_grp_path(prefix, path, inventory, get_value):
             if t == list or t == AnsibleSequence:
                 vlist = value
             elif t == dict or t == AnsibleMapping:
-                vlist = [ path_split[1] ]
+                # vlist = [ path_split[1] ]
+                vlist = value.keys()
             else:
                 vlist = [value]
             if vlist != None:
